@@ -24,9 +24,7 @@ export default {
   },
   methods: {
     add() {
-      browser.runtime.onMessage.sendMessage({ eventName: 'addDomain', params: [...this.domain] }, null);
-
-      addDomain(this.domain);
+      chrome.runtime.sendMessage({ eventName: 'AddDomain', params: [this.domain] });
       this.refreshDomains();
     },
 
