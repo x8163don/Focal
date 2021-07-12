@@ -12,6 +12,12 @@ class DomainAggregate {
   }
 }
 
-const domainInstance = new DomainAggregate();
+this.domainInstance = undefined;
+const getDomainAggregate = (domains = []) => {
+  if (!this.domainInstance) {
+    this.domainInstance = new DomainAggregate(domains);
+  }
+  return this.domainInstance;
+};
 
-module.exports = domainInstance;
+module.exports = { getDomainAggregate };

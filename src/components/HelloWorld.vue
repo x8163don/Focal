@@ -8,9 +8,6 @@
 </template>
 
 <script>
-const addDomain = require('../core/usecases/addDomain');
-const getDomains = require('../core/usecases/getDomains');
-
 export default {
   name: 'HelloWorld',
   data() {
@@ -23,13 +20,19 @@ export default {
     this.refreshDomains();
   },
   methods: {
-    add() {
-      chrome.runtime.sendMessage({ eventName: 'AddDomain', params: [this.domain] });
+    async add() {
+      if (!this.domain) {
+        return;
+      }
+
+      await chrome.runtime.sendMessage({ eventName: 'AddDomain', params: [this.domain] });
       this.refreshDomains();
     },
 
     refreshDomains() {
-      this.domains = getDomains();
+      chrome.runtime.sendMessage({ eventName: 'GetDomains' }, (response) => {
+        this.domains = response;
+      });
     },
   },
 };

@@ -1,7 +1,5 @@
-const domainAggregate = require('../entities/domain/domainAggregate');
+const { getDomainAggregate } = require('../entities/domain/domainAggregate');
 
-function getDomains() {
-  return domainAggregate.get();
-}
-
-module.exports = getDomains;
+module.exports = class GetDomainsUseCase {
+  getDomains = () => getDomainAggregate().get()
+};

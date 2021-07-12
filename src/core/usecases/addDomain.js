@@ -1,7 +1,13 @@
-const domainAggregate = require('../entities/domain/domainAggregate');
+const { getDomainAggregate } = require('../entities/domain/domainAggregate');
 
-function addDomain(domain) {
-  domainAggregate.add(domain);
-}
+module.exports = class AddDomainUseCase {
+  constructor(domainRepository) {
+    this.domainRepository = domainRepository;
+  }
 
-module.exports = addDomain;
+  addDomain(domain) {
+    getDomainAggregate().add(domain);
+
+    this.domainRepository.saveDomains(getDomainAggregate().domains);
+  }
+};

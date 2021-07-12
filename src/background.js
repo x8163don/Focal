@@ -1,19 +1,18 @@
-const addDomain = require('./core/usecases/addDomain');
-const getDomains = require('./core/usecases/getDomains');
+const { containers, initContainers } = require('./infrastructure/config/initContainers');
+const EVENT_NAMES = require('./infrastructure/constants/eventName');
 
-chrome.runtime.onInstalled.addListener(() => {
-  chrome.storage.local.set({
-    isOpen: false,
-    domains: [],
-  }, () => {
-    console.log('Init data');
-  });
+chrome.runtime.onInstalled.addListener(async () => {
+  initContainers();
+  await containers.domainController.initDomains();
 });
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  if (request.eventName === 'AddDomain') {
-    addDomain.call(this, ...request.params);
+  if (request.eventName === EVENT_NAMES.ADD_DOMAIN) {
+    console.log(containers);
+    containers.domainController.addDomain(...request.params);
   }
 
-  console.log(getDomains());
+  if (request.eventName === EVENT_NAMES.GET_DOMAINS) {
+    sendResponse(containers.domainController.getDomains());
+  }
 });
